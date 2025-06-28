@@ -3,6 +3,7 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import * as Dialog from '@radix-ui/react-dialog'
 import { ProductTable } from '@/features/products/components/ProductTable'
 import { ProductDialog } from '@/features/products/components/ProductDialog'
+import { useRouter } from 'next/router'
 
 // GraphQLクエリとミューテーションを定義
 const GET_PRODUCTS = gql`
@@ -29,7 +30,7 @@ const CREATE_PRODUCT = gql`
 
 export default function ProductsPage() {
     const [dialogOpen, setDialogOpen] = useState(false)
-
+    const router = useRouter()
     // Apollo Clientのhooksを使用
     const { data, loading, error, refetch } = useQuery(GET_PRODUCTS)
     const [createProduct] = useMutation(CREATE_PRODUCT, {
@@ -60,9 +61,15 @@ export default function ProductsPage() {
 
                 <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
                     <Dialog.Trigger asChild>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                            商品を追加
-                        </button>
+                        <div className="flex gap-4">
+                            <button onClick={() => router.push('/')}
+                                className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors'>
+                                ホームに戻る
+                            </button>
+                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                                商品を追加
+                            </button>
+                        </div>
                     </Dialog.Trigger>
 
                     <ProductDialog onSubmit={createProduct} />
