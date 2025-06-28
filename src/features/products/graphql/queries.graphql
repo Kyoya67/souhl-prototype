@@ -1,0 +1,17 @@
+query GetProducts {
+  products {
+    id
+    name
+    price
+    description
+  }
+}
+
+mutation CreateProduct($input: CreateProductInput!) {
+  createProduct(input: $input) {
+    id
+    name
+    price
+    description
+  }
+} 
