@@ -69,7 +69,6 @@ export default function ProductsPage() {
                     <ProductDialog onSubmit={createProduct} />
                 </Dialog.Root>
             </div>
-
             <ProductTable products={products} />
         </div>
     )
