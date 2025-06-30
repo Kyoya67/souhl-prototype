@@ -34,6 +34,7 @@ export type MutationCreateProductArgs = {
 
 export type Product = {
   __typename?: 'Product';
+  category: Scalars['String']['output'];
   description: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
@@ -43,6 +44,7 @@ export type Product = {
 export type Query = {
   __typename?: 'Query';
   product?: Maybe<Product>;
+  productCount: Scalars['Int']['output'];
   products: Array<Product>;
 };
 
