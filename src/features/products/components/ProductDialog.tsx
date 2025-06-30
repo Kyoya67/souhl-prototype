@@ -2,10 +2,17 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import * as Dialog from '@radix-ui/react-dialog'
-import { CreateProductMutation, CreateProductMutationVariables } from '@/graphql/graphql'
-import { FetchResult } from '@apollo/client'
+import { FetchResult, gql, MutationFunctionOptions, OperationVariables } from '@apollo/client'
 
-// Zodスキーマでバリデーション定義
+export const PRODUCT_DIALOG_FRAGMENT = gql`
+  fragment ProductDialogResult on Product {
+    id
+    name
+    price
+    description
+  }
+`
+
 const productSchema = z.object({
     name: z.string().min(1, '商品名は必須です').max(100, '商品名は100文字以内で入力してください'),
     price: z.number().min(1, '価格は1円以上で入力してください').max(9999999, '価格は9,999,999円以下で入力してください'),
@@ -15,7 +22,7 @@ const productSchema = z.object({
 type ProductFormData = z.infer<typeof productSchema>
 
 interface ProductDialogProps {
-    onSubmit: (variables: CreateProductMutationVariables) => Promise<FetchResult<CreateProductMutation>>
+    onSubmit: (options?: MutationFunctionOptions<any, OperationVariables>) => Promise<FetchResult<any>>
 }
 
 export function ProductDialog({ onSubmit }: ProductDialogProps) {
@@ -31,11 +38,13 @@ export function ProductDialog({ onSubmit }: ProductDialogProps) {
     const onSubmitForm = async (data: ProductFormData) => {
         try {
             await onSubmit({
-                input: {
-                    name: data.name,
-                    price: data.price,
-                    description: data.description,
-                },
+                variables: {
+                    input: {
+                        name: data.name,
+                        price: data.price,
+                        description: data.description,
+                    },
+                }
             })
             reset() // フォームをリセット
         } catch (error) {

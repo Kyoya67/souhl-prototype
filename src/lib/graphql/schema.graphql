@@ -3,6 +3,7 @@ type Product {
   name: String!
   price: Int!
   description: String!
+  category: String!
 }
 
 input CreateProductInput {

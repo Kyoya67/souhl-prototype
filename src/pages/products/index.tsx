@@ -1,41 +1,35 @@
 import { useState } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as Dialog from '@radix-ui/react-dialog'
-import { ProductTable } from '@/features/products/components/ProductTable'
-import { ProductDialog } from '@/features/products/components/ProductDialog'
+import { ProductTable, PRODUCT_TABLE_FRAGMENT } from '@/features/products/components/ProductTable'
+import { ProductDialog, PRODUCT_DIALOG_FRAGMENT } from '@/features/products/components/ProductDialog'
 import { useRouter } from 'next/router'
 
-// GraphQLクエリとミューテーションを定義
 const GET_PRODUCTS = gql`
   query GetProducts {
     products {
-      id
-      name
-      price
-      description
+      ...ProductTableItem
     }
   }
+  ${PRODUCT_TABLE_FRAGMENT}
 `
 
 const CREATE_PRODUCT = gql`
   mutation CreateProduct($input: CreateProductInput!) {
     createProduct(input: $input) {
-      id
-      name
-      price
-      description
+      ...ProductDialogResult
     }
   }
+  ${PRODUCT_DIALOG_FRAGMENT}
 `
 
 export default function ProductsPage() {
     const [dialogOpen, setDialogOpen] = useState(false)
     const router = useRouter()
-    // Apollo Clientのhooksを使用
     const { data, loading, error, refetch } = useQuery(GET_PRODUCTS)
     const [createProduct] = useMutation(CREATE_PRODUCT, {
         onCompleted: () => {
-            refetch() // 商品作成後にリストを再取得
+            refetch()
             setDialogOpen(false)
         }
     })

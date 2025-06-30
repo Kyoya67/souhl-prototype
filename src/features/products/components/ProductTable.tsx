@@ -1,6 +1,14 @@
-import { GetProductsQuery } from '@/graphql/graphql'
+import { Product } from '@/lib/graphql/generated/graphql'
+import { gql } from '@apollo/client'
 
-type Product = GetProductsQuery['products'][0]
+export const PRODUCT_TABLE_FRAGMENT = gql`
+  fragment ProductTableItem on Product {
+    id
+    name
+    price
+    description
+  }
+`
 
 interface ProductTableProps {
     products: Product[]
